@@ -16,7 +16,7 @@ namespace sbsclearn.Models.Entities
         public string Facilitator { get; set; }
         public decimal Duration { get; set; }
         public int UserId { get; set; }
-        public virtual User User { get; set; }
+        //public virtual User User { get; set; }
         public string FileUploadPath { get; set; }
         public DateTime DateCreated { get; set; }
         public ICollection<UsersCourses> UsersCourses { get; set; }

@@ -204,12 +204,10 @@ namespace sbsclearn.Migrations
 
                     b.HasKey("CourseId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("Course");
 
                     b.HasData(
-                        new { CourseId = 1, CourseName = "Programming in C#", DateCreated = new DateTime(2020, 9, 10, 23, 43, 46, 166, DateTimeKind.Local), Duration = 20m, Facilitator = "Samuel Babalola", FileUploadPath = "C:\\Users\\innaji\\source\\repos\\sbsclearn\\sbsclearn\\FileUploads", UserId = 1 }
+                        new { CourseId = 1, CourseName = "Programming in C#", DateCreated = new DateTime(2020, 9, 10, 23, 57, 36, 47, DateTimeKind.Local), Duration = 20m, Facilitator = "Samuel Babalola", FileUploadPath = "C:\\Users\\innaji\\source\\repos\\sbsclearn\\sbsclearn\\FileUploads", UserId = 1 }
                     );
                 });
 
@@ -224,10 +222,6 @@ namespace sbsclearn.Migrations
                     b.Property<int>("UserId");
 
                     b.HasKey("CourseAttemptId");
-
-                    b.HasIndex("CourseId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("CourseAttempt");
 
@@ -310,27 +304,6 @@ namespace sbsclearn.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("sbsclearn.Models.Entities.Course", b =>
-                {
-                    b.HasOne("sbsclearn.Models.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("sbsclearn.Models.Entities.CourseAttempt", b =>
-                {
-                    b.HasOne("sbsclearn.Models.Entities.Course", "Course")
-                        .WithMany()
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("sbsclearn.Models.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);

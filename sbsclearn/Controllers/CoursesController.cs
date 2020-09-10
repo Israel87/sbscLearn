@@ -22,8 +22,7 @@ namespace sbsclearn.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            var sbsclearnDbContext = _context.Course.Include(c => c.User);
-            return View(await sbsclearnDbContext.ToListAsync());
+            return View(await _context.Course.ToListAsync());
         }
 
         // GET: Courses/Details/5
@@ -35,7 +34,6 @@ namespace sbsclearn.Controllers
             }
 
             var course = await _context.Course
-                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.CourseId == id);
             if (course == null)
             {
@@ -48,7 +46,6 @@ namespace sbsclearn.Controllers
         // GET: Courses/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.User, "UserID", "UserID");
             return View();
         }
 
@@ -65,7 +62,6 @@ namespace sbsclearn.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.User, "UserID", "UserID", course.UserId);
             return View(course);
         }
 
@@ -82,7 +78,6 @@ namespace sbsclearn.Controllers
             {
                 return NotFound();
             }
-            ViewData["UserId"] = new SelectList(_context.User, "UserID", "UserID", course.UserId);
             return View(course);
         }
 
@@ -118,7 +113,6 @@ namespace sbsclearn.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.User, "UserID", "UserID", course.UserId);
             return View(course);
         }
 
@@ -131,7 +125,6 @@ namespace sbsclearn.Controllers
             }
 
             var course = await _context.Course
-                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.CourseId == id);
             if (course == null)
             {

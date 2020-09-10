@@ -22,8 +22,7 @@ namespace sbsclearn.Controllers
         // GET: CourseAttempts
         public async Task<IActionResult> Index()
         {
-            var sbsclearnDbContext = _context.CourseAttempt.Include(c => c.Course).Include(c => c.User);
-            return View(await sbsclearnDbContext.ToListAsync());
+            return View(await _context.CourseAttempt.ToListAsync());
         }
 
         // GET: CourseAttempts/Details/5
@@ -35,8 +34,6 @@ namespace sbsclearn.Controllers
             }
 
             var courseAttempt = await _context.CourseAttempt
-                .Include(c => c.Course)
-                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.CourseAttemptId == id);
             if (courseAttempt == null)
             {
@@ -49,8 +46,6 @@ namespace sbsclearn.Controllers
         // GET: CourseAttempts/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Course, "CourseId", "CourseId");
-            ViewData["UserId"] = new SelectList(_context.User, "UserID", "UserID");
             return View();
         }
 
@@ -67,8 +62,6 @@ namespace sbsclearn.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Course, "CourseId", "CourseId", courseAttempt.CourseId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserID", "UserID", courseAttempt.UserId);
             return View(courseAttempt);
         }
 
@@ -85,8 +78,6 @@ namespace sbsclearn.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Course, "CourseId", "CourseId", courseAttempt.CourseId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserID", "UserID", courseAttempt.UserId);
             return View(courseAttempt);
         }
 
@@ -122,8 +113,6 @@ namespace sbsclearn.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Course, "CourseId", "CourseId", courseAttempt.CourseId);
-            ViewData["UserId"] = new SelectList(_context.User, "UserID", "UserID", courseAttempt.UserId);
             return View(courseAttempt);
         }
 
@@ -136,8 +125,6 @@ namespace sbsclearn.Controllers
             }
 
             var courseAttempt = await _context.CourseAttempt
-                .Include(c => c.Course)
-                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.CourseAttemptId == id);
             if (courseAttempt == null)
             {
