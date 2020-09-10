@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using sbsclearn.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+//using sbsclearn.Models.Repositories;
+// using sbsclearn.Models.Services;
 
 namespace sbsclearn
 {
@@ -34,11 +36,18 @@ namespace sbsclearn
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<sbsclearnDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("SbdefaultConn")));
             services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<sbsclearnDbContext>();
+
+            services.AddCors();
+
+            // register Repository classes here  
+            //services.AddScoped<IUserService, UserService>();
+            //services.AddScoped<ICourseAttemptService, CourseAttemptService>();
+            //services.AddScoped<ICourseService, CourseService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

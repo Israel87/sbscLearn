@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace sbsclearn.Data.Migrations
+namespace sbsclearn.Migrations
 {
-    public partial class CreateIdentitySchema : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,6 +45,22 @@ namespace sbsclearn.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    UserID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true),
+                    Username = table.Column<string>(nullable: true),
+                    Password = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.UserID);
                 });
 
             migrationBuilder.CreateTable(
@@ -153,6 +169,95 @@ namespace sbsclearn.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Course",
+                columns: table => new
+                {
+                    CourseId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CourseName = table.Column<string>(nullable: true),
+                    Facilitator = table.Column<string>(nullable: true),
+                    Duration = table.Column<decimal>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    FileUploadPath = table.Column<string>(nullable: true),
+                    DateCreated = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Course", x => x.CourseId);
+                    table.ForeignKey(
+                        name: "FK_Course_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CourseAttempt",
+                columns: table => new
+                {
+                    CourseAttemptId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(nullable: false),
+                    CourseId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseAttempt", x => x.CourseAttemptId);
+                    table.ForeignKey(
+                        name: "FK_CourseAttempt_Course_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Course",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CourseAttempt_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsersCourses",
+                columns: table => new
+                {
+                    UserID = table.Column<int>(nullable: false),
+                    CourseID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersCourses", x => new { x.UserID, x.CourseID });
+                    table.ForeignKey(
+                        name: "FK_UsersCourses_Course_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Course",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UsersCourses_User_UserID",
+                        column: x => x.UserID,
+                        principalTable: "User",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "UserID", "FirstName", "LastName", "Password", "Username" },
+                values: new object[] { 1, "Israel", "Nnaji", "jesh112@PN", "nnajiisrael@gmail.com" });
+
+            migrationBuilder.InsertData(
+                table: "Course",
+                columns: new[] { "CourseId", "CourseName", "DateCreated", "Duration", "Facilitator", "FileUploadPath", "UserId" },
+                values: new object[] { 1, "Programming in C#", new DateTime(2020, 9, 10, 23, 43, 46, 166, DateTimeKind.Local), 20m, "Samuel Babalola", "C:\\Users\\innaji\\source\\repos\\sbsclearn\\sbsclearn\\FileUploads", 1 });
+
+            migrationBuilder.InsertData(
+                table: "CourseAttempt",
+                columns: new[] { "CourseAttemptId", "CourseId", "UserId" },
+                values: new object[] { 1, 1, 1 });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -191,6 +296,21 @@ namespace sbsclearn.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Course_UserId",
+                table: "Course",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseAttempt_CourseId",
+                table: "CourseAttempt",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseAttempt_UserId",
+                table: "CourseAttempt",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,10 +331,22 @@ namespace sbsclearn.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CourseAttempt");
+
+            migrationBuilder.DropTable(
+                name: "UsersCourses");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Course");
+
+            migrationBuilder.DropTable(
+                name: "User");
         }
     }
 }
