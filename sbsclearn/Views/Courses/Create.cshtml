@@ -1,49 +1,69 @@
-﻿@model sbsclearn.Models.Entities.Course
+﻿@model sbsclearn.Models.ViewModels.CreateCourseVM
 
 @{
+
     ViewData["Title"] = "Create";
+
+
 }
 
-<h2>Create</h2>
-
-<h4>Course</h4>
+<h2>Create Course</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CourseName" class="control-label"></label>
-                <input asp-for="CourseName" class="form-control" />
+                <input asp-for="CourseName" class="form-control edge" />
                 <span asp-validation-for="CourseName" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="CourseDetails" class="control-label"></label>
+
+                @Html.TextAreaFor(m => m.CourseDetails, new { @class = "form-control edge", @cols = 80, @rows = 5 })
+                <span asp-validation-for="CourseDetails" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Categories" class="control-label"></label>
+                <select asp-for="Categories" class="form-control edge" asp-items="Html.GetEnumSelectList<sbsclearn.Models.Enums.Category>()">
+                    <option value="">Please Select</option>
+                </select>
+                <span asp-validation-for="Categories" class="text-danger"></span>
+            </div>
+       
+
+            <div class="form-group">
                 <label asp-for="Facilitator" class="control-label"></label>
-                <input asp-for="Facilitator" class="form-control" />
+                <input asp-for="Facilitator" class="form-control edge" />
                 <span asp-validation-for="Facilitator" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Duration" class="control-label"></label>
-                <input asp-for="Duration" class="form-control" />
+                <input asp-for="Duration" class="form-control edge" />
                 <span asp-validation-for="Duration" class="text-danger"></span>
             </div>
+            @*<div class="form-group">
+            <label asp-for="UserId" class="control-label"></label>
+            <input asp-for="UserId" class="form-control" />
+            <span asp-validation-for="UserId" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
+                <label asp-for="Cost" class="control-label"></label>
+                <input asp-for="Cost" class="form-control edge" />
+                <span asp-validation-for="Cost" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="FileUploadPath" class="control-label"></label>
-                <input asp-for="FileUploadPath" class="form-control" />
-                <span asp-validation-for="FileUploadPath" class="text-danger"></span>
+                <label asp-for="Path" class="control-label"></label>
+                <div class="custom-file">
+                    <input asp-for="Path" class="form-control custom-file-input edge" />
+                </div>
+                @*<span asp-validation-for="FileUploadPath" class="text-danger"></span>*@
             </div>
+
             <div class="form-group">
-                <label asp-for="DateCreated" class="control-label"></label>
-                <input asp-for="DateCreated" class="form-control" />
-                <span asp-validation-for="DateCreated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-info edgeIt" />
             </div>
         </form>
     </div>

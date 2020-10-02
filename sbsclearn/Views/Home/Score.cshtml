@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewData["Title"] = "Score";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Scores for Users</h2>
+
+@using sbsclearn.Models.Entities
+@model IEnumerable<sbsclearn.Models.Entities.ViewModels.ScoresVM>
+@{
+    ViewBag.Title = "Score List";
+}
+
+
+<table class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th>UserName</th>
+            <th>Course Name</th>
+            <th>Score</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var user in (IEnumerable<sbsclearn.Models.Entities.ViewModels.ScoresVM>)ViewData["scores"])
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.CourseName</td>
+                <td>@user.Score</td>
+                <td>@user.CategoryName</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -17,7 +17,7 @@ namespace sbsclearn.Data.Migrations
                     CourseId = 1,
                     CourseName = "Programming in C#",
                     Facilitator = "Samuel Babalola",
-                    UserId = 1,
+                   // UserId = 1,
                     Duration = 20,
                     FileUploadPath = "C:\\Users\\innaji\\source\\repos\\sbsclearn\\sbsclearn\\FileUploads",
                     DateCreated = DateTime.Now

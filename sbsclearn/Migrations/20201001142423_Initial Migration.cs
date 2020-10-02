@@ -40,7 +40,10 @@ namespace sbsclearn.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -55,8 +58,10 @@ namespace sbsclearn.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CourseName = table.Column<string>(nullable: true),
                     Facilitator = table.Column<string>(nullable: true),
+                    CourseDetails = table.Column<string>(nullable: true),
                     Duration = table.Column<decimal>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
+                    Cost = table.Column<float>(nullable: false),
+                    Categories = table.Column<int>(nullable: true),
                     FileUploadPath = table.Column<string>(nullable: true),
                     DateCreated = table.Column<DateTime>(nullable: false)
                 },
@@ -77,22 +82,6 @@ namespace sbsclearn.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CourseAttempt", x => x.CourseAttemptId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    UserID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Username = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.UserID);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,40 +194,28 @@ namespace sbsclearn.Migrations
                 name: "UsersCourses",
                 columns: table => new
                 {
-                    UserID = table.Column<int>(nullable: false),
-                    CourseID = table.Column<int>(nullable: false)
+                    UserCourseId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserInfoId = table.Column<string>(nullable: true),
+                    CourseID = table.Column<int>(nullable: false),
+                    CourseScore = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersCourses", x => new { x.UserID, x.CourseID });
+                    table.PrimaryKey("PK_UsersCourses", x => x.UserCourseId);
                     table.ForeignKey(
-                        name: "FK_UsersCourses_Course_UserID",
-                        column: x => x.UserID,
+                        name: "FK_UsersCourses_Course_CourseID",
+                        column: x => x.CourseID,
                         principalTable: "Course",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UsersCourses_User_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_UsersCourses_AspNetUsers_UserInfoId",
+                        column: x => x.UserInfoId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Course",
-                columns: new[] { "CourseId", "CourseName", "DateCreated", "Duration", "Facilitator", "FileUploadPath", "UserId" },
-                values: new object[] { 1, "Programming in C#", new DateTime(2020, 9, 10, 23, 57, 36, 47, DateTimeKind.Local), 20m, "Samuel Babalola", "C:\\Users\\innaji\\source\\repos\\sbsclearn\\sbsclearn\\FileUploads", 1 });
-
-            migrationBuilder.InsertData(
-                table: "CourseAttempt",
-                columns: new[] { "CourseAttemptId", "CourseId", "UserId" },
-                values: new object[] { 1, 1, 1 });
-
-            migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "UserID", "FirstName", "LastName", "Password", "Username" },
-                values: new object[] { 1, "Israel", "Nnaji", "jesh112@PN", "nnajiisrael@gmail.com" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -278,6 +255,16 @@ namespace sbsclearn.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersCourses_CourseID",
+                table: "UsersCourses",
+                column: "CourseID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UsersCourses_UserInfoId",
+                table: "UsersCourses",
+                column: "UserInfoId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -307,13 +294,10 @@ namespace sbsclearn.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Course");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "AspNetUsers");
         }
     }
 }

@@ -1,22 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using sbsclearn.Data;
 using sbsclearn.Models.Entities;
+using sbsclearn.Models.ViewModels;
 
 namespace sbsclearn.Controllers
 {
     public class CoursesController : Controller
     {
         private readonly sbsclearnDbContext _context;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public CoursesController(sbsclearnDbContext context)
+        public CoursesController(sbsclearnDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Courses
@@ -54,11 +59,33 @@ namespace sbsclearn.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CourseId,CourseName,Facilitator,Duration,UserId,FileUploadPath,DateCreated")] Course course)
+        //public async Task<IActionResult> Create([Bind("CourseId,CourseName,Facilitator,Duration,UserId,FileUploadPath,DateCreated")] Course course)
+        public async Task<IActionResult> Create(CreateCourseVM course)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(course);
+                string _filename = null;
+                if (course.Path != null)
+                {
+                    string uploadedFolder = Path.Combine(hostingEnvironment.WebRootPath, "images/FileUploads");
+                    // for unique uploads 
+                   _filename = Guid.NewGuid().ToString() + "_" + course.Path.FileName;
+                    // combining the above
+                   string filePath =  Path.Combine(uploadedFolder, _filename);
+                   course.Path.CopyTo(new FileStream(filePath, FileMode.Create));
+                }
+                Course _newCourse = new Course
+                {
+                    CourseName = course.CourseName,
+                    DateCreated = DateTime.Now,
+                    CourseDetails = course.CourseDetails,
+                    Facilitator = course.Facilitator,
+                    Duration = course.Duration,
+                    Cost = course.Cost,
+                    Categories = course.Categories,
+                    FileUploadPath = _filename
+                };
+                _context.Add(_newCourse);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

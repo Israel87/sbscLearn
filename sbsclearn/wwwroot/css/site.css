@@ -35,3 +35,26 @@ body {
         display: none;
     }
 }
+
+/*Custom css form sbsc learn*/
+.edge {
+    border-radius : 0px
+}
+
+.edgeIt {
+    border-radius: 0px;
+    width: 100px
+}
+
+.coursefont {
+    font-weight : 700
+}
+
+.pt{
+    padding-top: 30px
+}
+
+.thumbnail {
+    height: 200px;
+    width: auto
+}

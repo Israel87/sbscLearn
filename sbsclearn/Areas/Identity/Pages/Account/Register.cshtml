@@ -1,0 +1,60 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+@*<h2>@ViewData["Title"]</h2>*@
+
+<div class="row" style="padding-top: 3em">
+    <div class="col-md-4">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h4><b>Sign Up and Start Learning.</b></h4><hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.FirstName"></label>
+                <input asp-for="Input.FirstName" class="form-control edge" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.LastName"></label>
+                <input asp-for="Input.LastName" class="form-control edge" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Email"></label>
+                <input asp-for="Input.Email" class="form-control edge" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Password"></label>
+                <input asp-for="Input.Password" class="form-control edge" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ConfirmPassword"></label>
+                <input asp-for="Input.ConfirmPassword" class="form-control edge" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label asp-for="Input.Newsletter">
+                        <input asp-for="Input.Newsletter" />
+                        @Html.DisplayNameFor(m => m.Input.Newsletter)
+                    </label>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-info edgeIt">Sign Up</button>
+        </form>
+    </div>
+    @*<div class="col-md-6 col-md-offset-2" style="margin-top: -40px">
+        <section>
+            <h6>SBSC Learn Live</h6>
+            <p><strong>October 13th - 16th</strong> </p>
+        </section>
+    </div>*@
+</div>
+
+ @section Scripts {
+      <partial name="_ValidationScriptsPartial" />
+}

@@ -12,9 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Entities\ViewModels\" />
-    <Folder Include="Models\Enums\" />
-    <Folder Include="FileUploads\" />
+    <Folder Include="Areas\Identity\Services\" />
   </ItemGroup>
 
 </Project>

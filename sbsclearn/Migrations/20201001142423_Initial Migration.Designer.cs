@@ -10,7 +10,7 @@ using sbsclearn.Data;
 namespace sbsclearn.Migrations
 {
     [DbContext(typeof(sbsclearnDbContext))]
-    [Migration("20200910225736_Initial Migration")]
+    [Migration("20201001142423_Initial Migration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,9 @@ namespace sbsclearn.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
@@ -114,6 +117,8 @@ namespace sbsclearn.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -192,6 +197,12 @@ namespace sbsclearn.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("Categories");
+
+                    b.Property<float>("Cost");
+
+                    b.Property<string>("CourseDetails");
+
                     b.Property<string>("CourseName");
 
                     b.Property<DateTime>("DateCreated");
@@ -202,15 +213,9 @@ namespace sbsclearn.Migrations
 
                     b.Property<string>("FileUploadPath");
 
-                    b.Property<int>("UserId");
-
                     b.HasKey("CourseId");
 
                     b.ToTable("Course");
-
-                    b.HasData(
-                        new { CourseId = 1, CourseName = "Programming in C#", DateCreated = new DateTime(2020, 9, 10, 23, 57, 36, 47, DateTimeKind.Local), Duration = 20m, Facilitator = "Samuel Babalola", FileUploadPath = "C:\\Users\\innaji\\source\\repos\\sbsclearn\\sbsclearn\\FileUploads", UserId = 1 }
-                    );
                 });
 
             modelBuilder.Entity("sbsclearn.Models.Entities.CourseAttempt", b =>
@@ -226,44 +231,40 @@ namespace sbsclearn.Migrations
                     b.HasKey("CourseAttemptId");
 
                     b.ToTable("CourseAttempt");
-
-                    b.HasData(
-                        new { CourseAttemptId = 1, CourseId = 1, UserId = 1 }
-                    );
                 });
 
-            modelBuilder.Entity("sbsclearn.Models.Entities.User", b =>
+            modelBuilder.Entity("sbsclearn.Models.Entities.UsersCourses", b =>
                 {
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserCourseId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CourseID");
+
+                    b.Property<decimal>("CourseScore");
+
+                    b.Property<string>("UserInfoId");
+
+                    b.HasKey("UserCourseId");
+
+                    b.HasIndex("CourseID");
+
+                    b.HasIndex("UserInfoId");
+
+                    b.ToTable("UsersCourses");
+                });
+
+            modelBuilder.Entity("sbsclearn.Models.Entities.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("FirstName");
 
                     b.Property<string>("LastName");
 
-                    b.Property<string>("Password");
+                    b.ToTable("ApplicationUser");
 
-                    b.Property<string>("Username");
-
-                    b.HasKey("UserID");
-
-                    b.ToTable("User");
-
-                    b.HasData(
-                        new { UserID = 1, FirstName = "Israel", LastName = "Nnaji", Password = "jesh112@PN", Username = "nnajiisrael@gmail.com" }
-                    );
-                });
-
-            modelBuilder.Entity("sbsclearn.Models.Entities.UsersCourses", b =>
-                {
-                    b.Property<int>("UserID");
-
-                    b.Property<int>("CourseID");
-
-                    b.HasKey("UserID", "CourseID");
-
-                    b.ToTable("UsersCourses");
+                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -314,14 +315,13 @@ namespace sbsclearn.Migrations
             modelBuilder.Entity("sbsclearn.Models.Entities.UsersCourses", b =>
                 {
                     b.HasOne("sbsclearn.Models.Entities.Course", "Course")
-                        .WithMany("UsersCourses")
-                        .HasForeignKey("UserID")
+                        .WithMany()
+                        .HasForeignKey("CourseID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("sbsclearn.Models.Entities.User", "User")
-                        .WithMany("UsersCourses")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("sbsclearn.Models.Entities.ApplicationUser", "UserInfo")
+                        .WithMany()
+                        .HasForeignKey("UserInfoId");
                 });
 #pragma warning restore 612, 618
         }

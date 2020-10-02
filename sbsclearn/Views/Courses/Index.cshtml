@@ -2,64 +2,90 @@
 
 @{
     ViewData["Title"] = "Index";
+
 }
 
-<h2>Index</h2>
+<div class="row pt">
+    
+    <div class="alert alert-info">
+        <h4><b>List of available courses.</b></h4>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CourseName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Facilitator)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Duration)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FileUploadPath)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourseName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Facilitator)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FileUploadPath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CourseId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CourseId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CourseId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <h5>
+        <a asp-action="Create"><b>Create New</b></a>
+    </h5><hr/>
+</div>
+
+@*<table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CourseName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Facilitator)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Duration)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.FileUploadPath)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateCreated)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Facilitator)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duration)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileUploadPath)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CourseId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CourseId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CourseId">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>*@
+<div class="row" style="padding-top: 10px">
+    @foreach (var item in Model)
+    {
+         var picturePath = "~/images/FileUploads/" + (item.FileUploadPath ?? "image1.png" );
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <img class="img-responsive thumbnail" src="@picturePath" id="Panel_Image" asp-append-version="true">
+                <div class="panel-body">
+
+                    <h5 class="panel-title coursefont">@item.CourseName</h5>
+                    <p>	&#8358; @item.Cost</p>
+                    @*<p class="">@item.CourseDetails</p>*@
+                    <a asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-info" style="border-radius: 0px">View Details </a>
+                    <a asp-action="Details" asp-route-id="@item.CourseId" class="btn btn-info" style="border-radius: 0px">Enroll </a>
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
+
+
